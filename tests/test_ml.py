@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
-from ml.features import extract_features_from_log, extract_features_from_behavior, prepare_training_data
-from ml.model import AnomalyDetector
+from bbss.ml.features import extract_features_from_log, extract_features_from_behavior, prepare_training_data
+from bbss.ml.model import AnomalyDetector
 
 
 class TestFeatures:

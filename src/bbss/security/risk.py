@@ -1,5 +1,5 @@
 from typing import List
-from config import config
+from ..config import config
 
 RISK_LEVEL_SAFE = "SAFE"
 RISK_LEVEL_WARNING = "WARNING"

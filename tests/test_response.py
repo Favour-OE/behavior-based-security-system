@@ -1,5 +1,5 @@
 import pytest
-from security.response import (
+from bbss.security.response import (
     generate_pin, verify_pin, dispatch_response, verify_challenge,
     RISK_LEVEL_SAFE, RISK_LEVEL_WARNING, RISK_LEVEL_HIGH_RISK
 )

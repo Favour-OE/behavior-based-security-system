@@ -1,6 +1,6 @@
 import pytest
-from behavior.profile import compute_baseline_metrics, build_profile, update_profile
-from behavior.anomaly import (
+from bbss.behavior.profile import compute_baseline_metrics, build_profile, update_profile
+from bbss.behavior.anomaly import (
     compute_zscore, detect_typing_time_anomaly, detect_login_hour_anomaly,
     detect_unknown_ip, detect_command_count_anomaly, detect_anomalies, ANOMALY_SIGNALS
 )

@@ -1,5 +1,5 @@
 from typing import List
-from config import config
+from ..config import config
 
 ANOMALY_SIGNALS = {
     "TYPING_TIME": "typing_time_deviation",

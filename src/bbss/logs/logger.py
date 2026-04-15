@@ -3,7 +3,7 @@ import json
 import os
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
-from config import config
+from ..config import config
 
 LOG_DIR = config.LOG_DIR
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -27,7 +27,7 @@ class SecurityLogFormatter(logging.Formatter):
 
 
 def setup_logger():
-    logger = logging.getLogger("bcss.security")
+    logger = logging.getLogger("bbss.security")
     logger.setLevel(getattr(logging, config.LOG_LEVEL))
     logger.handlers = []
     
@@ -87,7 +87,7 @@ def log_event(
     }
     
     record = logging.LogRecord(
-        name="bcss.security",
+        name="bbss.security",
         level=getattr(logging, level.upper(), logging.INFO),
         pathname="",
         lineno=0,

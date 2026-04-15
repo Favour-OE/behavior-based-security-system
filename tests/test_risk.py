@@ -1,9 +1,9 @@
 import pytest
-from security.risk import (
+from bbss.security.risk import (
     compute_risk_score, classify_risk, get_risk_assessment,
     RISK_LEVEL_SAFE, RISK_LEVEL_WARNING, RISK_LEVEL_HIGH_RISK
 )
-from config import config
+from bbss.config import config
 
 
 class TestRiskScoring:
@@ -21,7 +21,7 @@ class TestRiskScoring:
         assert score == expected
     
     def test_score_capped_at_100(self):
-        from security.risk import ANOMALY_WEIGHTS
+        from bbss.security.risk import ANOMALY_WEIGHTS
         total = sum(ANOMALY_WEIGHTS.values())
         if total > 100:
             assert min(total, 100) == 100

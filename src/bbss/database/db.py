@@ -1,7 +1,7 @@
 import sqlite3
 import os
 from contextlib import contextmanager
-from config import config
+from ..config import config
 
 DATABASE_PATH = config.DATABASE_PATH
 

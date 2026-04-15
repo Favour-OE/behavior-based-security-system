@@ -1,9 +1,9 @@
 import os
 from typing import List, Optional
-from database.models import get_behavior_logs_by_user, get_profile
-from ml.features import prepare_training_data
-from ml.model import AnomalyDetector
-from config import config
+from ..database.models import get_behavior_logs_by_user, get_profile
+from .features import prepare_training_data
+from .model import AnomalyDetector
+from ..config import config
 
 
 class ModelTrainer:
@@ -67,7 +67,7 @@ class ModelTrainer:
         if not self.detector.is_trained():
             return None
         
-        from ml.features import extract_features_from_behavior
+        from .features import extract_features_from_behavior
         features = extract_features_from_behavior(behavior)
         
         return self.detector.predict(features)

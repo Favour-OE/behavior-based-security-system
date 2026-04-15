@@ -1,6 +1,6 @@
 import secrets
-from security.risk import RISK_LEVEL_SAFE, RISK_LEVEL_WARNING, RISK_LEVEL_HIGH_RISK
-from database.models import deactivate_session_by_id
+from .risk import RISK_LEVEL_SAFE, RISK_LEVEL_WARNING, RISK_LEVEL_HIGH_RISK
+from ..database.models import deactivate_session_by_id
 
 
 def generate_pin() -> str:

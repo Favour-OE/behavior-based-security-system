@@ -1,6 +1,6 @@
 import re
-from auth.hashing import hash_password
-from database.models import create_user, create_behavior_profile
+from .hashing import hash_password
+from ..database.models import create_user, create_behavior_profile
 
 USERNAME_MIN_LENGTH = 3
 USERNAME_MAX_LENGTH = 32

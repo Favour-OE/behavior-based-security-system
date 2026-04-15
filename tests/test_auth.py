@@ -1,8 +1,8 @@
 import pytest
-from auth.signup import signup, validate_username, validate_password
-from auth.login import login
-from auth.hashing import hash_password, verify_password, generate_token, hash_token
-from database.models import get_user_by_username, get_user_by_id
+from bbss.auth.signup import signup, validate_username, validate_password
+from bbss.auth.login import login
+from bbss.auth.hashing import hash_password, verify_password, generate_token, hash_token
+from bbss.database.models import get_user_by_username, get_user_by_id, get_session_by_token_hash
 
 
 class TestPasswordHashing:
@@ -92,7 +92,7 @@ class TestSignup:
     
     def test_signup_creates_profile(self, test_db):
         result = signup("profileuser", "TestPassword123!")
-        from database.models import get_profile
+        from bbss.database.models import get_profile
         profile = get_profile(result["user_id"])
         assert profile is not None
         assert profile["profile_status"] == "bootstrapping"
@@ -129,7 +129,7 @@ class TestLogin:
         assert user["failed_attempts"] == 3
     
     def test_lockout_after_max_attempts(self, test_db, sample_user):
-        from config import config
+        from bbss.config import config
         for _ in range(config.MAX_FAILED_ATTEMPTS):
             login("testuser", "WrongPassword!")
         result = login("testuser", "TestPassword123!")
@@ -141,8 +141,3 @@ class TestLogin:
         login("testuser", "TestPassword123!")
         user = get_user_by_username("testuser")
         assert user["failed_attempts"] == 0
-
-
-def get_session_by_token_hash(token_hash):
-    from database.models import get_session_by_token_hash as get_session
-    return get_session(token_hash)

@@ -1,20 +1,13 @@
-"""
-BBSS - Behavior-Based Security System
-
-Main entry point providing integrated functions for authentication,
-behavior tracking, and security response.
-"""
-
 from typing import Dict, Optional
-from database.db import init_db
-from auth.signup import signup as _signup
-from auth.login import login as _login
-from behavior.capture import CaptureContext, capture_behavior_from_login
-from behavior.profile import get_or_create_profile, update_profile
-from behavior.anomaly import detect_anomalies
-from security.risk import compute_risk_score, classify_risk
-from security.response import dispatch_response
-from database.models import create_risk_log, increment_profile_session_count, get_behavior_logs_by_user
+from .database.db import init_db
+from .auth.signup import signup as _signup
+from .auth.login import login as _login
+from .behavior.capture import CaptureContext, capture_behavior_from_login
+from .behavior.profile import get_or_create_profile, update_profile
+from .behavior.anomaly import detect_anomalies
+from .security.risk import compute_risk_score, classify_risk
+from .security.response import dispatch_response
+from .database.models import create_risk_log, increment_profile_session_count, get_behavior_logs_by_user
 
 
 class Session:
@@ -142,7 +135,7 @@ class BBSS:
         return {"success": True, "behavior_log_id": log_id}
     
     def get_user_report(self, user_id: int) -> Dict:
-        from logs.audit import get_user_security_report
+        from .logs.audit import get_user_security_report
         return get_user_security_report(user_id)
 
 
@@ -171,3 +164,14 @@ def execute_command(session: Session, command_name: str) -> Dict:
 
 def end_session(session: Session) -> Dict:
     return get_engine().end_session(session)
+
+
+__all__ = [
+    "Session",
+    "BBSS",
+    "get_engine",
+    "signup",
+    "login",
+    "execute_command",
+    "end_session",
+]

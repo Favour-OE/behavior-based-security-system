@@ -1,6 +1,6 @@
 import pytest
-from logs.logger import log_event, log_login_attempt, log_security_decision
-from logs.audit import get_user_audit_trail, get_risk_summary_by_user
+from bbss.logs.logger import log_event, log_login_attempt, log_security_decision
+from bbss.logs.audit import get_user_audit_trail, get_risk_summary_by_user
 
 
 class TestLogging:
@@ -57,7 +57,7 @@ class TestAudit:
         assert summary["allowed"] == 0
     
     def test_get_risk_summary_with_logs(self, test_db, sample_user):
-        from database.models import create_risk_log
+        from bbss.database.models import create_risk_log
         
         create_risk_log(
             user_id=sample_user["user_id"],

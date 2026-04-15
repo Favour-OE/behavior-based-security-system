@@ -1,5 +1,5 @@
 from typing import List, Dict
-from database.models import get_risk_logs_by_user, get_recent_high_risk_events, get_user_by_id
+from ..database.models import get_risk_logs_by_user, get_recent_high_risk_events as db_get_recent_high_risk, get_user_by_id
 
 
 def get_user_audit_trail(user_id: int, limit: int = 100) -> List[Dict]:
@@ -7,7 +7,7 @@ def get_user_audit_trail(user_id: int, limit: int = 100) -> List[Dict]:
 
 
 def get_recent_high_risk_events(hours: int = 24) -> List[Dict]:
-    return get_recent_high_risk_events(hours)
+    return db_get_recent_high_risk(hours)
 
 
 def get_risk_summary_by_user(user_id: int) -> Dict:

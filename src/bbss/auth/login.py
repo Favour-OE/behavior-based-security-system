@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from auth.hashing import verify_password, generate_token, hash_token
-from database.models import (
+from .hashing import verify_password, generate_token, hash_token
+from ..database.models import (
     get_user_by_username,
     increment_failed_attempts,
     reset_failed_attempts,
@@ -8,8 +8,8 @@ from database.models import (
     is_account_locked,
     create_session
 )
-from config import config
-from behavior.capture import capture_behavior_from_login
+from ..config import config
+from ..behavior.capture import capture_behavior_from_login
 
 
 def check_account_lockout(user: dict) -> tuple[bool, str | None]:

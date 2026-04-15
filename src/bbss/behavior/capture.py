@@ -61,7 +61,7 @@ class CaptureContext:
         }
     
     def save(self) -> int:
-        from database.models import create_behavior_log
+        from ..database.models import create_behavior_log
         
         log_id = create_behavior_log(
             user_id=self.user_id,

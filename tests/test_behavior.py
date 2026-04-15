@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from behavior.capture import CaptureContext, create_capture_context, capture_behavior_from_login
+from bbss.behavior.capture import CaptureContext, create_capture_context, capture_behavior_from_login
 
 
 class TestCaptureContext:
@@ -69,7 +69,7 @@ class TestCaptureContext:
         log_id = ctx.save()
         assert log_id is not None
         
-        from database.models import get_behavior_log_by_id
+        from bbss.database.models import get_behavior_log_by_id
         log = get_behavior_log_by_id(log_id)
         assert log is not None
         assert log["user_id"] == sample_user["user_id"]

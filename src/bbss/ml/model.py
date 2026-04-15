@@ -3,7 +3,7 @@ import joblib
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from typing import Optional
-from config import config
+from ..config import config
 
 
 class AnomalyDetector:

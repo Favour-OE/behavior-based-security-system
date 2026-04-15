@@ -26,7 +26,7 @@
   - [Phase 5 — Logging & Audit System](#phase-5--logging--audit-system)
   - [Phase 6 — MVP Completion & Hardening](#phase-6--mvp-completion--hardening)
   - [Phase 7 — Machine Learning Integration](#phase-7--machine-learning-integration)
-  - [Phase 8 — Web Dashboard (Future)](#phase-8--web-dashboard-future)
+  - [Phase 8 — API Layer (Future)](#phase-8--api-layer-future)
 - [MVP Feature Checklist](#mvp-feature-checklist)
 - [Future Features](#future-features)
 - [Security Considerations](#security-considerations)
@@ -346,8 +346,7 @@ Logs are written to both a rotating file handler and the `risk_logs` database ta
 | Testing | `pytest` + `pytest-cov` | Coverage reporting |
 | Logging | `logging` (stdlib) | Rotating file handler, structured output |
 | (Future) Cache | Redis | Session storage, rate limiting |
-| (Future) API | FastAPI | Web dashboard backend |
-| (Future) Frontend | FastAPI + Jinja2 or React | Dashboard UI |
+| (Future) API | FastAPI | REST API backend |
 
 ---
 
@@ -443,61 +442,59 @@ CREATE TABLE sessions (
 ## Project Structure
 
 ```
-bcss/
+bbss/
 │
 ├── README.md
+├── pyproject.toml              # Package metadata and build configuration
 ├── requirements.txt
 ├── requirements-dev.txt
 ├── .env.example
 ├── .gitignore
-├── config.py                   # Central configuration (thresholds, limits, paths)
-├── main.py                     # Entry point / integration layer
 │
-├── auth/
-│   ├── __init__.py
-│   ├── signup.py               # User registration logic
-│   ├── login.py                # Credential verification + session creation
-│   └── hashing.py              # Argon2 password hashing + token generation
-│
-├── behavior/
-│   ├── __init__.py
-│   ├── capture.py              # Behavioral signal collection
-│   ├── profile.py              # Baseline builder and updater
-│   └── anomaly.py              # Statistical + ML anomaly detection
-│
-├── security/
-│   ├── __init__.py
-│   ├── risk.py                 # Risk score computation
-│   └── response.py             # Response action dispatcher
-│
-├── database/
-│   ├── __init__.py
-│   ├── db.py                   # Connection management, migrations
-│   └── models.py               # Table definitions + query helpers
-│
-├── logs/
-│   ├── __init__.py
-│   ├── logger.py               # Logging setup + structured event logger
-│   └── audit.py                # Audit trail query helpers
-│
-├── ml/
-│   ├── __init__.py
-│   ├── model.py                # Isolation Forest training + inference
-│   └── trainer.py              # Model retraining pipeline
-│
-├── utils/
-│   ├── __init__.py
-│   └── helpers.py              # Shared utilities (time formatting, JSON helpers)
+├── src/
+│   └── bbss/                  # Main package
+│       ├── __init__.py        # Package entry point (BBSS class, functions)
+│       ├── config.py          # Central configuration (thresholds, limits, paths)
+│       │
+│       ├── auth/              # Authentication module
+│       │   ├── signup.py      # User registration logic
+│       │   ├── login.py       # Credential verification + session creation
+│       │   └── hashing.py     # Argon2 password hashing + token generation
+│       │
+│       ├── behavior/           # Behavioral biometrics module
+│       │   ├── capture.py     # Behavioral signal collection
+│       │   ├── profile.py     # Baseline builder and updater
+│       │   └── anomaly.py     # Statistical + ML anomaly detection
+│       │
+│       ├── security/          # Security module
+│       │   ├── risk.py        # Risk score computation
+│       │   └── response.py    # Response action dispatcher
+│       │
+│       ├── database/          # Database module
+│       │   ├── db.py          # Connection management, migrations
+│       │   └── models.py      # Table definitions + query helpers
+│       │
+│       ├── logs/              # Logging module
+│       │   ├── logger.py      # Logging setup + structured event logger
+│       │   └── audit.py      # Audit trail query helpers
+│       │
+│       ├── ml/                # Machine learning module
+│       │   ├── features.py    # Feature extraction
+│       │   ├── model.py       # Isolation Forest training + inference
+│       │   └── trainer.py     # Model retraining pipeline
+│       │
+│       └── utils/             # Utilities module
+│           └── helpers.py     # Shared utilities (time formatting, JSON helpers)
 │
 └── tests/
-    ├── __init__.py
+    ├── conftest.py            # Pytest fixtures (in-memory DB, mock users)
     ├── test_auth.py
     ├── test_behavior.py
     ├── test_anomaly.py
     ├── test_risk.py
     ├── test_response.py
     ├── test_logging.py
-    └── conftest.py             # Pytest fixtures (in-memory DB, mock users)
+    └── test_ml.py
 ```
 
 ---
@@ -711,24 +708,21 @@ bcss/
 
 ---
 
-### Phase 8 — Web Dashboard (Future)
+### Phase 8 — API Layer (Future)
 
-**Goal:** A browser-based interface for system administrators to monitor behavioral security events.
+**Goal:** A RESTful API layer for programmatic access to BBSS functionality.
 
 **Planned Features:**
 
-- Login history per user (paginated)
-- Risk score timeline chart
-- Behavioral signal breakdown per session
-- High-risk event alerts feed
-- User profile baseline visualization
-- Audit log export (CSV / JSON)
-- Real-time event stream (WebSocket)
+- RESTful API for all BBSS operations
+- API key authentication
+- Rate limiting
+- OpenAPI/Swagger documentation
+- WebSocket support for real-time alerts
 
 **Planned Stack:**
-- FastAPI for the backend API
-- Jinja2 templates or React (Vite) for the frontend
-- Redis for session storage and real-time event queue
+- FastAPI for the API layer
+- Optional Redis for caching and rate limiting
 - Docker Compose for local development environment
 
 ---
@@ -760,7 +754,7 @@ bcss/
 |---------|-------|----------|
 | Isolation Forest ML model | 7 | High |
 | Automatic model retraining pipeline | 7 | High |
-| Web dashboard (FastAPI) | 8 | Medium |
+| REST API (FastAPI) | 8 | Medium |
 | Real-time WebSocket event stream | 8 | Medium |
 | PostgreSQL support | Post-MVP | Medium |
 | Redis session storage | Post-MVP | Medium |
@@ -864,57 +858,95 @@ ML_MODELS_DIR=./ml/models
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/bcss.git
-cd bcss
+git clone https://github.com/Favour-OE/behavior-based-security-system.git
+cd behavior-based-security-system
 
 # Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate        # Linux/macOS
 venv\Scripts\activate           # Windows
 
-# Install dependencies
-pip install -r requirements.txt
+# Install the package in development mode
+pip install -e .
 
-# Install dev dependencies
-pip install -r requirements-dev.txt
+# Install dev dependencies (for testing)
+pip install -e ".[dev]"
 
 # Set up environment
 cp .env.example .env
-# Edit .env and populate SECRET_KEY and any other required values
+# Edit .env and populate any required values
 
 # Initialize the database
-python -c "from database.db import init_db; init_db()"
+python -c "from bbss.database import init_db; init_db()"
 ```
 
 ---
 
 ## Running the System
 
-BCSS is a backend engine, not a standalone application. Import and call it from your application:
+BBSS is a Python package that you integrate into your application:
 
 ```python
-from main import signup, login, execute_command, end_session
+from bbss import signup, login, execute_command, end_session
 
 # Register a new user
 result = signup(username="john_doe", password="SecurePassword123!")
 print(result)  # {"success": True, "user_id": 1}
 
 # Authenticate a user
-session = login(
+result = login(
     username="john_doe",
     password="SecurePassword123!",
     typing_time=2.14,
     ip_address="192.168.1.10"
 )
-print(session)
-# {"success": True, "session_token": "...", "risk_score": 10, "decision": "ALLOW"}
+print(result)
+# {"success": True, "session_token": "...", "risk_score": 10, "decision": "ALLOW", ...}
 
-# Record a command during the session
-execute_command(session_token=session["session_token"], command_name="view_report")
-
-# End the session
-end_session(session_token=session["session_token"])
+if result["success"] and result.get("session"):
+    # Record a command during the session
+    execute_command(result["session"], "view_report")
+    
+    # End the session
+    end_session(result["session"])
 ```
+
+### Using the BBSS Engine Class
+
+For more control, use the `BBSS` class directly:
+
+```python
+from bbss import BBSS, Session
+
+engine = BBSS()
+
+# Signup
+engine.signup("john_doe", "SecurePassword123!")
+
+# Login
+result = engine.login(
+    username="john_doe",
+    password="SecurePassword123!",
+    typing_time=2.14,
+    ip_address="192.168.1.10"
+)
+
+if result["success"]:
+    session = result["session"]
+    # Use session...
+```
+
+### Environment Variables
+
+See `.env.example` for all configurable options. Key variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_PATH` | `./bcss.db` | SQLite database path |
+| `SECRET_KEY` | (none) | Random key for HMAC operations |
+| `SESSION_EXPIRY_HOURS` | `24` | Session token lifetime |
+| `MAX_FAILED_ATTEMPTS` | `5` | Failed logins before lockout |
+| `ML_ENABLED` | `true` | Enable ML anomaly detection |
 
 ---
 

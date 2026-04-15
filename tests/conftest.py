@@ -2,7 +2,7 @@ import pytest
 import sys
 import os
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
 
 
 @pytest.fixture(scope="function")
@@ -13,7 +13,7 @@ def test_db(tmp_path, monkeypatch):
     monkeypatch.setenv("LOG_DIR", str(tmp_path / "logs"))
     monkeypatch.setenv("CONSOLE_LOGGING", "false")
     
-    from database import db
+    from bbss.database import db
     db.DATABASE_PATH = str(db_path)
     db.init_db()
     
@@ -22,7 +22,7 @@ def test_db(tmp_path, monkeypatch):
 
 @pytest.fixture
 def sample_user(test_db):
-    from auth.signup import signup
+    from bbss.auth.signup import signup
     result = signup("testuser", "TestPassword123!")
     assert result["success"] is True
     return result
@@ -30,7 +30,7 @@ def sample_user(test_db):
 
 @pytest.fixture
 def auth_token(test_db, sample_user):
-    from auth.login import login
+    from bbss.auth.login import login
     result = login("testuser", "TestPassword123!")
     assert result["success"] is True
     return result["session_token"]

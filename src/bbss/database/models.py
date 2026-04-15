@@ -1,7 +1,7 @@
 import json
 import sqlite3
-from database.db import get_db, get_connection, DATABASE_PATH
-from config import config
+from .db import get_db, get_connection, DATABASE_PATH
+from bbss.config import config
 
 
 def create_user(username: str, password_hash: str, email: str = None) -> int | None:
@@ -31,6 +31,13 @@ def get_user_by_id(user_id: int) -> dict | None:
         cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
         row = cursor.fetchone()
         return dict(row) if row else None
+
+
+def delete_user(user_id: int) -> bool:
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        return cursor.rowcount > 0
 
 
 def increment_failed_attempts(user_id: int) -> None:
@@ -293,3 +300,9 @@ def get_recent_high_risk_events(hours: int = 24) -> list[dict]:
             (hours,)
         )
         return [dict(row) for row in cursor.fetchall()]
+
+
+def get_session_by_token(token: str) -> dict | None:
+    from bbss.auth.hashing import hash_token
+    token_hash = hash_token(token)
+    return get_session_by_token_hash(token_hash)
