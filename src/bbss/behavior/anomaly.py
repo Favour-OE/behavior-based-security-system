@@ -1,5 +1,5 @@
 from typing import List
-from ..config import config
+from ..config import get_config
 
 ANOMALY_SIGNALS = {
     "TYPING_TIME": "typing_time_deviation",
@@ -21,6 +21,7 @@ def compute_zscore(value: float, mean: float, std: float) -> float:
 def detect_typing_time_anomaly(current: float, profile_avg: float, profile_std: float) -> bool:
     if current is None or profile_avg is None or profile_std is None:
         return False
+    config = get_config()
     zscore = abs(compute_zscore(current, profile_avg, profile_std))
     return zscore > config.ZSCORE_THRESHOLD
 
@@ -39,6 +40,7 @@ def detect_login_hour_anomaly(current_hour: int, profile_hours: List[int]) -> bo
     q3 = sorted_hours[q3_idx]
     iqr = q3 - q1
     
+    config = get_config()
     lower_bound = q1 - config.IQR_MULTIPLIER * iqr
     upper_bound = q3 + config.IQR_MULTIPLIER * iqr
     
@@ -70,6 +72,7 @@ def detect_unknown_ip(current_ip: str, known_ips: List[str]) -> bool:
 def detect_command_count_anomaly(current_count: int, profile_avg: float, profile_std: float) -> bool:
     if current_count is None or profile_avg is None or profile_std is None:
         return False
+    config = get_config()
     zscore = abs(compute_zscore(current_count, profile_avg, profile_std))
     return zscore > config.ZSCORE_THRESHOLD
 
@@ -85,6 +88,7 @@ def detect_unknown_commands(current_commands: List[str], common_commands: List[s
 def detect_session_duration_anomaly(current_duration: float, profile_avg: float, profile_std: float) -> bool:
     if current_duration is None or profile_avg is None or profile_std is None:
         return False
+    config = get_config()
     zscore = abs(compute_zscore(current_duration, profile_avg, profile_std))
     return zscore > config.ZSCORE_THRESHOLD
 

@@ -5,6 +5,14 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
 
 
+@pytest.fixture(scope="function", autouse=True)
+def reset_config():
+    from bbss.config import Config
+    Config.reset()
+    yield
+    Config.reset()
+
+
 @pytest.fixture(scope="function")
 def test_db(tmp_path, monkeypatch):
     db_path = tmp_path / "test.db"
@@ -12,10 +20,15 @@ def test_db(tmp_path, monkeypatch):
     monkeypatch.setenv("DATABASE_PATH", str(db_path))
     monkeypatch.setenv("LOG_DIR", str(tmp_path / "logs"))
     monkeypatch.setenv("CONSOLE_LOGGING", "false")
+    monkeypatch.setenv("ML_ENABLED", "false")
     
-    from bbss.database import db
-    db.DATABASE_PATH = str(db_path)
-    db.init_db()
+    from bbss.config import Config
+    Config._instance = None
+    config = Config()
+    Config.set_instance(config)
+    
+    from bbss.database.db import init_db
+    init_db()
     
     yield str(db_path)
 

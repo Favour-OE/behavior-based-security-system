@@ -1,7 +1,7 @@
 import json
 import sqlite3
-from .db import get_db, get_connection, DATABASE_PATH
-from bbss.config import config
+from .db import get_db, get_connection
+from ..config import get_config
 
 
 def create_user(username: str, password_hash: str, email: str = None) -> int | None:
@@ -227,6 +227,7 @@ def get_profile_status(user_id: int) -> str:
 
 
 def increment_profile_session_count(user_id: int) -> None:
+    config = get_config()
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -303,6 +304,6 @@ def get_recent_high_risk_events(hours: int = 24) -> list[dict]:
 
 
 def get_session_by_token(token: str) -> dict | None:
-    from bbss.auth.hashing import hash_token
+    from ..auth.hashing import hash_token
     token_hash = hash_token(token)
     return get_session_by_token_hash(token_hash)

@@ -3,7 +3,7 @@ from typing import List, Optional
 from ..database.models import get_behavior_logs_by_user, get_profile
 from .features import prepare_training_data
 from .model import AnomalyDetector
-from ..config import config
+from ..config import get_config
 
 
 class ModelTrainer:
@@ -14,6 +14,7 @@ class ModelTrainer:
         self.sessions_trained = 0
     
     def should_train(self) -> bool:
+        config = get_config()
         if not config.ML_ENABLED:
             return False
         
@@ -31,6 +32,7 @@ class ModelTrainer:
         return needs_retrain or not self.detector.is_trained()
     
     def _get_trained_sessions(self) -> int:
+        config = get_config()
         model_path = os.path.join(config.ML_MODELS_DIR, f"user_{self.user_id}.pkl")
         if not os.path.exists(model_path):
             return 0
@@ -40,6 +42,7 @@ class ModelTrainer:
         return previous_trainings
     
     def train(self) -> bool:
+        config = get_config()
         if not config.ML_ENABLED:
             return False
         
@@ -61,6 +64,7 @@ class ModelTrainer:
         return success
     
     def detect_anomaly(self, behavior: dict) -> Optional[dict]:
+        config = get_config()
         if not config.ML_ENABLED:
             return None
         
@@ -74,6 +78,7 @@ class ModelTrainer:
 
 
 def get_trainer(user_id: int) -> Optional[ModelTrainer]:
+    config = get_config()
     if not config.ML_ENABLED:
         return None
     

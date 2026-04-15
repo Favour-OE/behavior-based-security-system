@@ -8,11 +8,12 @@ from ..database.models import (
     is_account_locked,
     create_session
 )
-from ..config import config
+from ..config import get_config
 from ..behavior.capture import capture_behavior_from_login
 
 
 def check_account_lockout(user: dict) -> tuple[bool, str | None]:
+    config = get_config()
     locked, locked_until = is_account_locked(user['id'])
     if locked:
         return True, f"Account is locked until {locked_until}"
@@ -24,6 +25,7 @@ def check_account_lockout(user: dict) -> tuple[bool, str | None]:
 
 
 def login(username: str, password: str, typing_time: float = 0.0, ip_address: str = None, user_agent: str = None) -> dict:
+    config = get_config()
     user = get_user_by_username(username)
     if not user:
         return {"success": False, "session_token": None, "user_id": None, "error": "Invalid credentials"}

@@ -1,13 +1,12 @@
 import sqlite3
 import os
 from contextlib import contextmanager
-from ..config import config
-
-DATABASE_PATH = config.DATABASE_PATH
+from ..config import get_config
 
 
 def get_connection():
-    conn = sqlite3.connect(DATABASE_PATH)
+    config = get_config()
+    conn = sqlite3.connect(config.DATABASE_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
@@ -28,7 +27,8 @@ def get_db():
 
 
 def init_db():
-    db_dir = os.path.dirname(DATABASE_PATH)
+    config = get_config()
+    db_dir = os.path.dirname(config.DATABASE_PATH)
     if db_dir:
         os.makedirs(db_dir, exist_ok=True)
 

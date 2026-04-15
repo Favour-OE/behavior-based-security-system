@@ -2,7 +2,6 @@ import statistics
 from collections import Counter
 from typing import List
 from ..database.models import get_behavior_logs_by_user, get_profile, update_behavior_profile
-from ..config import config
 
 MIN_SESSIONS_FOR_PROFILE = 3
 

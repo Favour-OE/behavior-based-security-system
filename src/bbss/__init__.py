@@ -1,4 +1,5 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
+from .config import Config, configure, get_config
 from .database.db import init_db
 from .auth.signup import signup as _signup
 from .auth.login import login as _login
@@ -31,8 +32,21 @@ class Session:
 
 
 class BBSS:
-    def __init__(self):
+    def __init__(self, **config_overrides: Any):
+        if config_overrides:
+            self._config = Config(**config_overrides)
+            Config.set_instance(self._config)
+        else:
+            self._config = Config.get_instance()
+            if self._config is None:
+                self._config = Config()
+                Config.set_instance(self._config)
+        
         init_db()
+    
+    @property
+    def config(self) -> Config:
+        return self._config
     
     def signup(self, username: str, password: str, email: str = None) -> Dict:
         return _signup(username, password, email)
@@ -139,7 +153,7 @@ class BBSS:
         return get_user_security_report(user_id)
 
 
-_engine = None
+_engine: Optional[BBSS] = None
 
 
 def get_engine() -> BBSS:
@@ -169,6 +183,9 @@ def end_session(session: Session) -> Dict:
 __all__ = [
     "Session",
     "BBSS",
+    "Config",
+    "configure",
+    "get_config",
     "get_engine",
     "signup",
     "login",

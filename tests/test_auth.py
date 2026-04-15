@@ -129,7 +129,8 @@ class TestLogin:
         assert user["failed_attempts"] == 3
     
     def test_lockout_after_max_attempts(self, test_db, sample_user):
-        from bbss.config import config
+        from bbss.config import get_config
+        config = get_config()
         for _ in range(config.MAX_FAILED_ATTEMPTS):
             login("testuser", "WrongPassword!")
         result = login("testuser", "TestPassword123!")

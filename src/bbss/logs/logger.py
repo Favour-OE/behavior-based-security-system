@@ -3,12 +3,13 @@ import json
 import os
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
-from ..config import config
+from ..config import get_config
 
-LOG_DIR = config.LOG_DIR
-os.makedirs(LOG_DIR, exist_ok=True)
 
-LOG_FILE = os.path.join(LOG_DIR, "security.log")
+def _get_log_file() -> str:
+    config = get_config()
+    os.makedirs(config.LOG_DIR, exist_ok=True)
+    return os.path.join(config.LOG_DIR, "security.log")
 
 
 class SecurityLogFormatter(logging.Formatter):
@@ -27,12 +28,14 @@ class SecurityLogFormatter(logging.Formatter):
 
 
 def setup_logger():
+    config = get_config()
     logger = logging.getLogger("bbss.security")
     logger.setLevel(getattr(logging, config.LOG_LEVEL))
     logger.handlers = []
     
+    log_file = _get_log_file()
     file_handler = RotatingFileHandler(
-        LOG_FILE,
+        log_file,
         maxBytes=10 * 1024 * 1024,
         backupCount=config.LOG_RETENTION_DAYS
     )
