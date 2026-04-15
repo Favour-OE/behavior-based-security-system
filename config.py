@@ -28,9 +28,12 @@ class Config:
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     LOG_RETENTION_DAYS = int(os.getenv("LOG_RETENTION_DAYS", "30"))
     CONSOLE_LOGGING = os.getenv("CONSOLE_LOGGING", "true").lower() == "true"
+    ML_ENABLED = os.getenv("ML_ENABLED", "true").lower() == "true"
     ML_MIN_SESSIONS_FOR_TRAINING = int(os.getenv("ML_MIN_SESSIONS_FOR_TRAINING", "20"))
     ML_RETRAIN_EVERY_N_SESSIONS = int(os.getenv("ML_RETRAIN_EVERY_N_SESSIONS", "10"))
     ML_MODELS_DIR = os.getenv("ML_MODELS_DIR", "./ml/models")
+    ML_ISOLATION_FOREST_CONTAMINATION = float(os.getenv("ML_ISOLATION_FOREST_CONTAMINATION", "0.1"))
+    ML_ANOMALY_THRESHOLD = float(os.getenv("ML_ANOMALY_THRESHOLD", "-0.1"))
 
 
 config = Config()
