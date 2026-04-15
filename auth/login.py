@@ -9,6 +9,7 @@ from database.models import (
     create_session
 )
 from config import config
+from behavior.capture import capture_behavior_from_login
 
 
 def check_account_lockout(user: dict) -> tuple[bool, str | None]:
@@ -52,10 +53,18 @@ def login(username: str, password: str, typing_time: float = 0.0, ip_address: st
 
     session_id = create_session(user['id'], token_hash, expires_at, ip_address, user_agent)
 
+    capture_ctx = capture_behavior_from_login(
+        user_id=user['id'],
+        typing_time=typing_time,
+        ip_address=ip_address,
+        user_agent=user_agent
+    )
+
     return {
         "success": True,
         "session_token": session_token,
         "session_id": session_id,
         "user_id": user['id'],
+        "capture_context": capture_ctx,
         "error": None
     }
