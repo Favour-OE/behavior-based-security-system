@@ -115,7 +115,7 @@ ML: ML_ENABLED (true), ML_MIN_SESSIONS_FOR_TRAINING (20), ML_RETRAIN_EVERY_N_SES
   },
   'env-variables': {
     title: 'Environment Variables',
-    content: `DATABASE_PATH: Path to SQLite database file (./bcss.db)
+    content: `DATABASE_PATH: Path to SQLite database file (./bbss.db)
 SECRET_KEY: Random 32-byte hex string for HMAC operations
 SESSION_EXPIRY_HOURS: Session token lifetime (24)
 MAX_FAILED_ATTEMPTS: Login failures before lockout (5)
@@ -160,30 +160,46 @@ function initApp() {
   wrapCodeBlocks();
   initScrollSpy();
   initSearch();
+  initProgressBar();
+  initBackToTop();
+  initKeyboardShortcuts();
+  initMobileMenu();
 }
 
 function initTheme() {
   const saved = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const themeToggle = document.querySelector('.theme-toggle');
+  const sunIcon = themeToggle?.querySelector('.sun-icon');
+  const moonIcon = themeToggle?.querySelector('.moon-icon');
   
   if (saved === 'dark' || (saved === null && prefersDark)) {
     document.documentElement.classList.add('dark');
-    document.querySelector('.theme-toggle').textContent = '☀️';
+    if (sunIcon) sunIcon.style.display = 'block';
+    if (moonIcon) moonIcon.style.display = 'none';
+  } else {
+    if (sunIcon) sunIcon.style.display = 'none';
+    if (moonIcon) moonIcon.style.display = 'block';
   }
 }
 
 function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.classList.contains('dark');
+  const themeToggle = document.querySelector('.theme-toggle');
+  const sunIcon = themeToggle?.querySelector('.sun-icon');
+  const moonIcon = themeToggle?.querySelector('.moon-icon');
   
   if (isDark) {
     html.classList.remove('dark');
     localStorage.setItem('theme', 'light');
-    document.querySelector('.theme-toggle').textContent = '🌙';
+    if (sunIcon) sunIcon.style.display = 'none';
+    if (moonIcon) moonIcon.style.display = 'block';
   } else {
     html.classList.add('dark');
     localStorage.setItem('theme', 'dark');
-    document.querySelector('.theme-toggle').textContent = '☀️';
+    if (sunIcon) sunIcon.style.display = 'block';
+    if (moonIcon) moonIcon.style.display = 'none';
   }
 }
 
@@ -196,14 +212,14 @@ function detectLanguage(content) {
       trimmed.match(/^import\s+/m) ||
       trimmed.includes('def ') || trimmed.includes('class ') ||
       trimmed.includes('__init__') || trimmed.includes('self.')) {
-    return 'Python';
+    return 'python';
   }
   if (trimmed.startsWith('npm ') || trimmed.startsWith('yarn ') || 
       trimmed.includes('require(') || trimmed.includes('import {') ||
       trimmed.includes('const ') || trimmed.includes('let ') ||
       trimmed.includes('export default') || trimmed.includes('export const') ||
       trimmed.includes('export function')) {
-    return 'JavaScript';
+    return 'javascript';
   }
   if (trimmed.startsWith('git ') || trimmed.startsWith('docker ') ||
       trimmed.startsWith('./') || trimmed.startsWith('bash ') ||
@@ -219,31 +235,31 @@ function detectLanguage(content) {
       trimmed.startsWith('fork') || trimmed.startsWith('clone') ||
       trimmed.match(/^git checkout/) || trimmed.match(/^git commit/) ||
       trimmed.match(/^git push/) || trimmed.match(/^git clone/)) {
-    return 'Bash';
+    return 'bash';
   }
   if (trimmed.includes('SELECT ') || trimmed.includes('INSERT INTO') ||
       trimmed.includes('UPDATE ') || trimmed.includes('DELETE FROM') ||
       trimmed.includes('CREATE TABLE') || trimmed.includes('PRIMARY KEY') ||
       trimmed.includes('REFERENCES ') || trimmed.includes('ON DELETE')) {
-    return 'SQL';
+    return 'sql';
   }
   if (trimmed.includes('<?php') || trimmed.includes('<?')) {
-    return 'PHP';
+    return 'php';
   }
   if (trimmed.match(/^fn\s+\w+\s*\(/m) || trimmed.match(/^impl\s+\w+/m) ||
       trimmed.match(/^use\s+\w+::/m) || trimmed.includes('let mut') ||
       trimmed.includes('-> ') || trimmed.includes('&str') ||
       trimmed.includes('println!')) {
-    return 'Rust';
+    return 'rust';
   }
   if (trimmed.match(/^func\s+\w+/m) || trimmed.match(/^package\s+\w+/m) ||
       trimmed.includes('fmt.Println') || trimmed.includes('fmt.Printf')) {
-    return 'Go';
+    return 'go';
   }
   if (trimmed.includes('env ') || trimmed.match(/^[A-Z_]+=/m)) {
-    return 'Env';
+    return 'bash';
   }
-  return 'Terminal';
+  return 'bash';
 }
 
 function escapeHtml(text) {
@@ -281,7 +297,7 @@ function wrapCodeBlocks() {
             <span class="code-block-dot yellow"></span>
             <span class="code-block-dot green"></span>
           </div>
-          <span class="code-block-title">${language}</span>
+          <span class="code-block-title">${language.toUpperCase()}</span>
         </div>
         <div class="code-block-right">
           <button class="code-block-copy-btn" data-code="${content.replace(/"/g, '&quot;').replace(/\n/g, '&#10;')}" data-copied="false" title="Copy code">
@@ -293,7 +309,7 @@ function wrapCodeBlocks() {
           </button>
         </div>
       </div>
-      <div class="code-block-content"><code>${escapeHtml(content)}</code></div>
+      <div class="code-block-content"><code class="language-${language}">${escapeHtml(content)}</code></div>
     `;
     
     block.parentNode.replaceChild(wrapper, block);
@@ -321,6 +337,12 @@ function wrapCodeBlocks() {
       }, 60000);
     });
   });
+  
+  if (typeof hljs !== 'undefined') {
+    document.querySelectorAll('pre code').forEach((block) => {
+      hljs.highlightElement(block);
+    });
+  }
 }
 
 function initScrollSpy() {
@@ -361,6 +383,9 @@ function initScrollSpy() {
       const target = document.getElementById(targetId);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
+        if (window.innerWidth <= 768) {
+          closeMobileMenu();
+        }
       }
     });
   });
@@ -371,6 +396,18 @@ function highlightText(text, query) {
   
   const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
   return escapeHtml(text).replace(regex, '<mark class="search-highlight">$1</mark>');
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
 }
 
 function initSearch() {
@@ -384,9 +421,7 @@ function initSearch() {
     searchContainer.appendChild(searchResultsContainer);
   }
   
-  searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.trim().toLowerCase();
-    
+  const performSearch = debounce((query) => {
     if (query.length < 2) {
       searchResultsContainer.innerHTML = '';
       return;
@@ -426,14 +461,16 @@ function initSearch() {
     
     results.sort((a, b) => b.titleMatch - a.titleMatch);
     
-    searchResultsContainer.innerHTML = results.slice(0, 5).map(result => `
-      <div class="search-result-item" data-target="${result.id}">
+    searchResultsContainer.innerHTML = results.slice(0, 5).map((result, index) => `
+      <div class="search-result-item" data-target="${result.id}" data-index="${index}" tabindex="0">
         <strong>${highlightText(result.title, query)}</strong>
         <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
           ${highlightText(result.snippet.substring(0, 100), query)}
         </div>
       </div>
     `).join('');
+    
+    selectedResultIndex = -1;
     
     document.querySelectorAll('.search-result-item').forEach(item => {
       item.addEventListener('click', () => {
@@ -443,10 +480,48 @@ function initSearch() {
           target.scrollIntoView({ behavior: 'smooth' });
           searchInput.value = '';
           searchResultsContainer.innerHTML = '';
+          closeMobileMenu();
         }
       });
     });
+  }, 200);
+  
+  let selectedResultIndex = -1;
+  
+  searchInput.addEventListener('input', (e) => {
+    selectedResultIndex = -1;
+    performSearch(e.target.value.trim().toLowerCase());
   });
+  
+  searchInput.addEventListener('keydown', (e) => {
+    const items = searchResultsContainer.querySelectorAll('.search-result-item');
+    if (items.length === 0) return;
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedResultIndex = Math.min(selectedResultIndex + 1, items.length - 1);
+      updateResultSelection(items, selectedResultIndex);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedResultIndex = Math.max(selectedResultIndex - 1, -1);
+      updateResultSelection(items, selectedResultIndex);
+    } else if (e.key === 'Enter' && selectedResultIndex >= 0) {
+      e.preventDefault();
+      items[selectedResultIndex].click();
+    } else if (e.key === 'Escape') {
+      searchResultsContainer.innerHTML = '';
+      searchInput.blur();
+    }
+  });
+  
+  function updateResultSelection(items, index) {
+    items.forEach((item, i) => {
+      item.classList.toggle('selected', i === index);
+      if (i === index) {
+        item.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  }
   
   searchInput.addEventListener('focus', () => {
     if (searchInput.value.trim().length >= 2) {
@@ -459,6 +534,98 @@ function initSearch() {
       searchResultsContainer.innerHTML = '';
     }
   });
+}
+
+function initProgressBar() {
+  const progressBar = document.getElementById('progressBar');
+  if (!progressBar) return;
+  
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    progressBar.style.width = `${progress}%`;
+  });
+}
+
+function initBackToTop() {
+  const backToTopBtn = document.getElementById('backToTop');
+  if (!backToTopBtn) return;
+  
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
+    }
+  });
+  
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+function initKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    const sections = Array.from(document.querySelectorAll('.section[id]'));
+    
+    if (e.key === '/') {
+      e.preventDefault();
+      document.querySelector('.search-box input').focus();
+    } else if (e.key === 'j' || e.key === 'J') {
+      e.preventDefault();
+      navigateSection(sections, 1);
+    } else if (e.key === 'k' || e.key === 'K') {
+      e.preventDefault();
+      navigateSection(sections, -1);
+    } else if (e.key === 't' || e.key === 'T') {
+      e.preventDefault();
+      toggleTheme();
+    } else if (e.key === 'Escape') {
+      closeMobileMenu();
+    }
+  });
+  
+  function navigateSection(sections, direction) {
+    const scrollTop = window.scrollY;
+    let currentIndex = -1;
+    
+    sections.forEach((section, index) => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= 150) {
+        currentIndex = index;
+      }
+    });
+    
+    let nextIndex = currentIndex + direction;
+    if (nextIndex < 0) nextIndex = 0;
+    if (nextIndex >= sections.length) nextIndex = sections.length - 1;
+    
+    sections[nextIndex].scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function initMobileMenu() {
+  let menuToggle = document.querySelector('.mobile-menu-toggle');
+  
+  if (!menuToggle) {
+    const sidebar = document.querySelector('.sidebar');
+    menuToggle = document.createElement('button');
+    menuToggle.className = 'mobile-menu-toggle';
+    menuToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+    menuToggle.setAttribute('aria-label', 'Toggle menu');
+    sidebar.insertBefore(menuToggle, sidebar.firstChild);
+  }
+  
+  menuToggle.addEventListener('click', () => {
+    document.body.classList.toggle('mobile-menu-open');
+  });
+}
+
+function closeMobileMenu() {
+  document.body.classList.remove('mobile-menu-open');
 }
 
 document.addEventListener('DOMContentLoaded', initApp);

@@ -260,23 +260,59 @@ body {
 }
 
 .theme-toggle {
-  background: none;
-  border: 1px solid var(--border-color);
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  background: transparent;
+  border: 1px solid #4d4d5d;
+  padding: 4px 8px;
   cursor: pointer;
-  color: var(--text-primary);
-  font-size: 16px;
-  transition: all 0.2s;
+  color: #6d6d8d;
+  border-radius: 4px;
+  transition: color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .theme-toggle:hover {
-  background-color: var(--bg-secondary);
+  color: #cdd6f4;
+  border-color: #6d6d8d;
+}
+
+.theme-toggle:active {
+  transform: scale(0.98);
+}
+
+.theme-toggle .theme-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.theme-toggle .moon-icon {
+  display: block;
+}
+
+.theme-toggle .sun-icon {
+  display: none;
+}
+
+html.dark .theme-toggle .moon-icon {
+  display: none;
+}
+
+html.dark .theme-toggle .sun-icon {
+  display: block;
+}
+
+html.dark .theme-toggle {
+  color: #6d6d8d;
+}
+
+html.dark .theme-toggle:hover {
+  color: #cdd6f4;
+  border-color: #6d6d8d;
 }
 
 /* ===== MAIN CONTENT ===== */
 .main-content {
-  /* margin-left: 280px; */
   flex: 1;
   padding: 2rem;
   max-width: 1200px;
@@ -651,28 +687,85 @@ li {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 1rem;
+    position: fixed;
+    left: -100%;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    padding: 2rem 0;
+    border-right: 1px solid var(--border-color);
+    border-bottom: none;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  body.mobile-menu-open .sidebar {
+    left: 0;
+  }
+
+  body.mobile-menu-open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-primary);
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .mobile-menu-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-menu-toggle:hover {
+    background: var(--bg-tertiary);
+  }
+
+  .sidebar-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .header {
     margin-left: 0;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .header-content {
+    display: none;
   }
 
   .main-content {
     margin-left: 0;
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
   }
 
   .page-title {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .section-title {
@@ -680,19 +773,184 @@ li {
   }
 
   .nav-section {
-    display: inline-block;
-    margin-right: 2rem;
-    margin-bottom: 1rem;
+    display: block;
+    margin-right: 0;
+    margin-bottom: 0;
   }
 
   .nav-section-title {
-    display: none;
+    display: block;
   }
 
   .nav-link {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
+    display: block;
+    padding: 0.75rem 1rem;
+    margin-right: 0;
+    margin-bottom: 0.25rem;
   }
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  width: 0;
+  z-index: 1001;
+  transition: width 0.1s ease-out;
+}
+
+/* ===== BACK TO TOP ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+  z-index: 100;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.back-to-top svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .progress-bar {
+    height: 2px;
+  }
+}
+
+/* ===== SEARCH KEYBOARD NAV ===== */
+.search-result-item.selected {
+  background-color: var(--bg-tertiary);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* ===== SKIP LINK (Accessibility) ===== */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--accent);
+  color: white;
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ===== CODE BLOCK SYNTAX (Override highlight.js dark theme) ===== */
+.code-block-content code.hljs {
+  background: transparent;
+  padding: 0;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag {
+  color: #cba6f7;
+}
+
+.hljs-string,
+.hljs-title,
+.hljs-section,
+.hljs-attribute,
+.hljs-literal,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-addition {
+  color: #a6e3a1;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: #6c7086;
+  font-style: italic;
+}
+
+.hljs-number,
+.hljs-regexp,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #fab387;
+}
+
+.hljs-function,
+.hljs-title.function_ {
+  color: #89b4fa;
+}
+
+.hljs-variable,
+.hljs-params {
+  color: #fab387;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #f9e2af;
+}
+
+.hljs-operator {
+  color: #89dceb;
+}
+
+.hljs-punctuation {
+  color: #cdd6f4;
+}
+
+.hljs-class .hljs-title {
+  color: #f38ba8;
+}
+
+.hljs-attr {
+  color: #89b4fa;
+}
+
+.hljs-property {
+  color: #94e2d5;
 }
