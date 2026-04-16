@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBSS Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-main">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="logo">
+                    <div class="logo-icon">⚡</div>
+                    <span>BBSS</span>
+                </a>
+                <span class="version-badge">v1.0.0</span>
+            </div>
+
+            <div class="search-box">
+                <input type="text" placeholder="Search documentation...">
+            </div>
+
+            <!-- Getting Started -->
+            <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="#introduction" class="nav-link active">Introduction</a>
+                <a href="#installation" class="nav-link">Installation</a>
+                <a href="#quickstart" class="nav-link">Quick Start</a>
+            </div>
+
+            <!-- Core Concepts -->
+            <div class="nav-section">
+                <div class="nav-section-title">Core Concepts</div>
+                <a href="#architecture" class="nav-link">Architecture</a>
+                <a href="#risk-scoring" class="nav-link">Risk Scoring</a>
+                <a href="#behavioral-signals" class="nav-link">Behavioral Signals</a>
+                <a href="#profile-lifecycle" class="nav-link">Profile Lifecycle</a>
+            </div>
+
+            <!-- API Reference -->
+            <div class="nav-section">
+                <div class="nav-section-title">API Reference</div>
+                <a href="#bbss-class" class="nav-link">BBSS Class</a>
+                <a href="#session-class" class="nav-link">Session Class</a>
+                <a href="#module-functions" class="nav-link">Module Functions</a>
+            </div>
+
+            <!-- Configuration -->
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a href="#runtime-config" class="nav-link">Runtime Configuration</a>
+                <a href="#config-reference" class="nav-link">Config Reference</a>
+                <a href="#env-variables" class="nav-link">Environment Variables</a>
+            </div>
+
+            <!-- Resources -->
+            <div class="nav-section">
+                <div class="nav-section-title">Resources</div>
+                <a href="#examples" class="nav-link">Examples</a>
+                <a href="#troubleshooting" class="nav-link">Troubleshooting</a>
+                <a href="#contributing" class="nav-link">Contributing</a>
+            </div>
+        </aside>
+
+        <div style="margin-left: 280px; width: calc(100% - 280px);">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-content">
+                    <div class="breadcrumb">Documentation / <span>Introduction</span></div>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                </div>
+            </header>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">BBSS Documentation</h1>
+                    <p class="page-subtitle">Behavior-Based Security System — Behavioral biometrics engine for continuous authentication</p>
+                    <div class="info-banner">
+                        <strong>New to BBSS?</strong> Start with the <a href="#quickstart" style="color: var(--accent); font-weight: 600;">Quick Start</a> to get up and running in 5 minutes.
+                    </div>
+                </div>
+
+                <!-- Table of Contents -->
+                <div class="toc">
+                    <div class="toc-title">On this page</div>
+                    <ul class="toc-list">
+                        <li><a href="#introduction">Introduction</a></li>
+                        <li><a href="#key-features">Key Features</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#quickstart">Quick Start</a></li>
+                        <li><a href="#architecture">Architecture</a></li>
+                        <li><a href="#risk-scoring">Risk Scoring</a></li>
+                        <li><a href="#behavioral-signals">Behavioral Signals</a></li>
+                        <li><a href="#profile-lifecycle">Profile Lifecycle</a></li>
+                        <li><a href="#runtime-config">Runtime Configuration</a></li>
+                        <li><a href="#config-reference">Config Reference</a></li>
+                        <li><a href="#env-variables">Environment Variables</a></li>
+                    </ul>
+                </div>
+
+                <!-- Introduction -->
+                <section class="section" id="introduction">
+                    <h2 class="section-title">What is BBSS?</h2>
+                    <p class="paragraph">
+                        <strong>BBSS (Behavior-Based Security System)</strong> is a Python package that implements continuous authentication through behavioral biometrics. It goes beyond traditional password-based authentication by monitoring user behavior patterns and flagging sessions that deviate from established baselines.
+                    </p>
+                    <p class="paragraph">
+                        The system captures behavioral signals (typing speed, login times, command patterns, IP addresses) and builds statistical profiles. When a session deviates from this baseline, BBSS computes a risk score and triggers appropriate security responses: allow, challenge with PIN verification, or block.
+                    </p>
+                </section>
+
+                <!-- Key Features -->
+                <section class="section" id="key-features">
+                    <h2 class="section-title">Key Features</h2>
+                    <ul class="toc-list" style="margin-left: 0; margin-bottom: 1.5rem;">
+                        <li class="list-item"><strong>Continuous authentication:</strong> Validates sessions in real-time, not just at login</li>
+                        <li class="list-item"><strong>Behavioral profiling:</strong> Learns user patterns—typing speed, session timing, command sequences</li>
+                        <li class="list-item"><strong>Statistical anomaly detection:</strong> Uses z-score and IQR-based analysis</li>
+                        <li class="list-item"><strong>Risk-based responses:</strong> Smart escalation—allow safe sessions, challenge suspicious ones, block threats</li>
+                        <li class="list-item"><strong>Machine learning ready:</strong> Isolation Forest models for advanced anomaly detection</li>
+                        <li class="list-item"><strong>Runtime configuration:</strong> All settings configurable at runtime via code or environment</li>
+                        <li class="list-item"><strong>Production-ready:</strong> 88+ tests with full coverage, modular design</li>
+                    </ul>
+                </section>
+
+                <!-- Installation -->
+                <section class="section" id="installation">
+                    <h2 class="section-title">Installation</h2>
+                    
+                    <h3 class="section-subtitle">Requirements</h3>
+                    <p class="paragraph">Python 3.10+</p>
+
+                    <h3 class="section-subtitle">Install from PyPI</h3>
+                    <div class="code-block">pip install bbss</div>
+
+                    <h3 class="section-subtitle">Install from Source</h3>
+                    <div class="code-block">git clone https://github.com/Favour-OE/behavior-based-security-system.git
+cd behavior-based-security-system
+pip install -e .</div>
+
+                    <h3 class="section-subtitle">Install with Dev Dependencies</h3>
+                    <div class="code-block">pip install -e ".[dev]"</div>
+
+                    <div class="alert alert-note">
+                        <strong>Dependencies:</strong> argon2-cffi, python-dotenv, scikit-learn, joblib, numpy
+                    </div>
+                </section>
+
+                <!-- Quick Start -->
+                <section class="section" id="quickstart">
+                    <h2 class="section-title">Quick Start</h2>
+
+                    <h3 class="section-subtitle">1. Basic Usage with BBSS Class</h3>
+                    <div class="code-block">from bbss import BBSS
+
+# Initialize the engine
+engine = BBSS()
+
+# Register a new user
+result = engine.signup(username="john_doe", password="SecurePassword123!")
+print(result)
+# {"success": True, "user_id": 1, "error": None}</div>
+
+                    <h3 class="section-subtitle">2. Authenticate with Behavioral Capture</h3>
+                    <div class="code-block"># Authenticate a user
+result = engine.login(
+    username="john_doe",
+    password="SecurePassword123!",
+    typing_time=2.14,    # seconds taken to type password
+    ip_address="192.168.1.10"
+)
+
+print(result)
+# {
+#   "success": True,
+#   "session": <Session object>,
+#   "session_token": "a3f9e8c2...",
+#   "risk_score": 10,
+#   "decision": "ALLOW",
+#   "anomaly_signals": []
+# }</div>
+
+                    <h3 class="section-subtitle">3. Handle Session Based on Decision</h3>
+                    <div class="code-block">result = engine.login("john_doe", "SecurePassword123!", typing_time=5.0)
+
+if result["success"]:
+    if result.get("session"):
+        # Safe session - use the session object
+        session = result["session"]
+        engine.execute_command(session, "view_report")
+        engine.end_session(session)
+    elif result.get("requires_verification"):
+        # Warning level - show PIN challenge
+        print(f"Enter PIN: {result['pin']}")
+    else:
+        # Blocked - high risk detected
+        print("Session blocked:", result.get("error"))</div>
+
+                    <h3 class="section-subtitle">4. Using Module Functions (Alternative)</h3>
+                    <div class="code-block">from bbss import signup, login, execute_command, end_session, Session
+
+# Register
+signup("jane", "Password123!")
+
+# Login
+result = login("jane", "Password123!", typing_time=1.5)
+session = result["session"]
+
+# Record commands
+execute_command(session, "view_report")
+execute_command(session, "export_data")
+
+# End session
+end_session(session)</div>
+                </section>
+
+                <!-- Architecture -->
+                <section class="section" id="architecture">
+                    <h2 class="section-title">Architecture</h2>
+                    <p class="paragraph">
+                        BBSS follows a modular architecture with clear separation of concerns:
+                    </p>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Module</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">auth</span></td>
+                                <td>User registration, login, password hashing (Argon2), session management</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">behavior</span></td>
+                                <td>Behavioral signal capture, profile building, anomaly detection</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">security</span></td>
+                                <td>Risk scoring, risk classification, security response dispatcher</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">database</span></td>
+                                <td>SQLite database management, models, query helpers</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ml</span></td>
+                                <td>Machine learning models (Isolation Forest), feature extraction</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">logs</span></td>
+                                <td>Security logging, audit trail management</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">config</span></td>
+                                <td>Runtime configuration management</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Risk Scoring -->
+                <section class="section" id="risk-scoring">
+                    <h2 class="section-title">Risk Scoring</h2>
+                    <p class="paragraph">
+                        Every session receives a risk score from 0–100 based on detected anomalies. The score determines the security response:
+                    </p>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Score Range</th>
+                                <th>Classification</th>
+                                <th>Response</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0–30</td>
+                                <td><span class="param-name">SAFE</span></td>
+                                <td>Grant full access immediately</td>
+                            </tr>
+                            <tr>
+                                <td>31–60</td>
+                                <td><span class="param-name">WARNING</span></td>
+                                <td>Secondary verification (PIN challenge)</td>
+                            </tr>
+                            <tr>
+                                <td>61–100</td>
+                                <td><span class="param-name">HIGH_RISK</span></td>
+                                <td>Block session immediately</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="paragraph">
+                        Each anomaly signal contributes a weighted score. Default weights are configurable via <code class="inline-code">RISK_WEIGHT_*</code> settings. The total risk score is capped at 100 to prevent overflow.
+                    </p>
+                    <div class="alert alert-note">
+                        <strong>Note:</strong> During the <strong>Bootstrapping</strong> stage (first 4 sessions), all risk scores are 0 since no baseline exists yet. During <strong>Warmup</strong> (sessions 5-9), risk scores are halved to reduce false positives.
+                    </div>
+                </section>
+
+                <!-- Behavioral Signals -->
+                <section class="section" id="behavioral-signals">
+                    <h2 class="section-title">Behavioral Signals</h2>
+                    <p class="paragraph">
+                        BBSS captures and analyzes the following behavioral signals during each session:
+                    </p>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Signal</th>
+                                <th>Detection Method</th>
+                                <th>Default Weight</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">typing_time_deviation</span></td>
+                                <td>Z-score analysis</td>
+                                <td>20</td>
+                                <td>Deviation from user's typical typing speed</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">unusual_login_hour</span></td>
+                                <td>IQR analysis</td>
+                                <td>25</td>
+                                <td>Login time outside normal hours</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">unusual_login_day</span></td>
+                                <td>Pattern matching</td>
+                                <td>10</td>
+                                <td>Login on unusual day of week</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">unknown_ip</span></td>
+                                <td>IP whitelist check</td>
+                                <td>20</td>
+                                <td>Login from unrecognized IP address</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">command_count_anomaly</span></td>
+                                <td>Z-score analysis</td>
+                                <td>15</td>
+                                <td>Unusual number of commands for session</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">unknown_commands</span></td>
+                                <td>Command whitelist</td>
+                                <td>10</td>
+                                <td>Execution of uncommon commands</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">session_duration_anomaly</span></td>
+                                <td>Z-score analysis</td>
+                                <td>10</td>
+                                <td>Session length differs from baseline</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ml_isolation_forest</span></td>
+                                <td>ML model prediction</td>
+                                <td>30</td>
+                                <td>Isolation Forest flags session as anomalous</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 class="section-subtitle">Detection Algorithms</h3>
+                    <p class="paragraph">
+                        <strong>Z-score analysis</strong> measures how many standard deviations a value is from the mean:
+                    </p>
+                    <div class="code-block">z = (current_value - baseline_mean) / baseline_std
+
+If |z| > ZSCORE_THRESHOLD (default: 2.0), the signal is flagged as anomalous.</div>
+                    <p class="paragraph">
+                        <strong>IQR analysis</strong> uses the interquartile range to identify outliers in time-based data:
+                    </p>
+                    <div class="code-block">typical_range = [Q1 - IQR_MULTIPLIER * IQR, Q3 + IQR_MULTIPLIER * IQR]
+
+If value falls outside this range, it is flagged. Default multiplier is 1.5.</div>
+                </section>
+
+                <!-- Profile Lifecycle -->
+                <section class="section" id="profile-lifecycle">
+                    <h2 class="section-title">Profile Lifecycle</h2>
+                    <p class="paragraph">
+                        BBSS handles new users gracefully with a three-stage profile maturity system. This prevents false positives during the initial learning period:
+                    </p>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Stage</th>
+                                <th>Sessions</th>
+                                <th>Sensitivity</th>
+                                <th>Anomaly Detection</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">Bootstrapping</span></td>
+                                <td>1–4</td>
+                                <td>0%</td>
+                                <td>Disabled — all sessions treated as safe</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">Warmup</span></td>
+                                <td>5–9</td>
+                                <td>50%</td>
+                                <td>Reduced sensitivity — risk scores halved</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">Active</span></td>
+                                <td>10+</td>
+                                <td>100%</td>
+                                <td>Full detection with normal thresholds</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="paragraph">
+                        The system automatically transitions users between stages based on their session count. Configuration options allow customization:
+                    </p>
+                    <div class="code-block">MIN_SESSIONS_BOOTSTRAPPING = 5   # Sessions before warmup
+MIN_SESSIONS_WARMUP = 10      # Sessions before active
+ML_MIN_SESSIONS_FOR_TRAINING = 20  # Sessions before ML training</div>
+                    <div class="alert alert-note">
+                        <strong>Tip:</strong> For testing, you can reduce these thresholds to speed up profile maturity:
+                        <code class="inline-code">engine = BBSS(MIN_SESSIONS_BOOTSTRAPPING=1, MIN_SESSIONS_WARMUP=2)</code>
+                    </div>
+                </section>
+
+                <!-- BBSS Class -->
+                <section class="section" id="bbss-class">
+                    <h2 class="section-title">BBSS Class</h2>
+                    <p class="paragraph">
+                        The main entry point for using BBSS. Instantiate this class to get access to all authentication and behavioral analysis features.
+                    </p>
+
+                    <h3 class="section-subtitle">Constructor</h3>
+                    <div class="code-block">BBSS(**config_overrides)</div>
+                    <p class="paragraph">
+                        Initialize the BBSS engine. All configuration options can be passed as keyword arguments for per-instance customization.
+                    </p>
+                    <div class="code-block"># Use all defaults
+engine = BBSS()
+
+# Override specific settings for this instance
+engine = BBSS(
+    RISK_THRESHOLD_WARNING=40,
+    RISK_THRESHOLD_HIGH=80,
+    ML_ENABLED=False
+)</div>
+
+                    <h3 class="section-subtitle">Properties</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">config</span></td>
+                                <td><span class="param-type">Config</span></td>
+                                <td>Current configuration instance with all active settings</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Methods</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">signup(username, password, email?)</span></td>
+                                <td>Register a new user with secure password hashing</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">login(username, password, typing_time?, ip_address?, user_agent?)</span></td>
+                                <td>Authenticate user and return login result with session</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">execute_command(session, command_name)</span></td>
+                                <td>Record a command executed during active session</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">end_session(session)</span></td>
+                                <td>End an active session and save behavior data</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">get_user_report(user_id)</span></td>
+                                <td>Get security report including risk history for a user</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">verify_pin(session, pin)</span></td>
+                                <td>Verify a PIN for sessions requiring secondary auth</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Session Class -->
+                <section class="section" id="session-class">
+                    <h2 class="section-title">Session Class</h2>
+                    <p class="paragraph">
+                        Represents an active authenticated session. Returned by <code class="inline-code">engine.login()</code> when the session risk level is SAFE.
+                    </p>
+
+                    <h3 class="section-subtitle">Properties</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">user_id</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td>User identifier from database</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">token</span></td>
+                                <td><span class="param-type">str</span></td>
+                                <td>Session token for API authentication</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">session_id</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td>Database session ID</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">capture_ctx</span></td>
+                                <td><span class="param-type">CaptureContext</span></td>
+                                <td>Behavior capture context for the session</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">created_at</span></td>
+                                <td><span class="param-type">datetime</span></td>
+                                <td>Session creation timestamp</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">expires_at</span></td>
+                                <td><span class="param-type">datetime</span></td>
+                                <td>Session expiration timestamp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Methods</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">add_command(command_name)</span></td>
+                                <td>Record a command executed during session</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">end()</span></td>
+                                <td>End the session and return behavior log ID</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">is_expired()</span></td>
+                                <td>Check if session has expired</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Module Functions -->
+                <section class="section" id="module-functions">
+                    <h2 class="section-title">Module Functions</h2>
+                    <p class="paragraph">
+                        Alternative to using the BBSS class. These functions use a global singleton engine for simpler usage in smaller applications.
+                    </p>
+                    <div class="code-block">from bbss import (
+    signup, login, execute_command, end_session,
+    configure, get_config, BBSS, Session
+)</div>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Function</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">signup(username, password, email?)</span></td>
+                                <td>Register new user using global engine</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">login(username, password, typing_time?, ip_address?, user_agent?)</span></td>
+                                <td>Authenticate user using global engine</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">execute_command(session, command_name)</span></td>
+                                <td>Record command using global engine</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">end_session(session)</span></td>
+                                <td>End session using global engine</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">configure(**kwargs)</span></td>
+                                <td>Configure global singleton settings</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">get_config()</span></td>
+                                <td>Get current global config instance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="alert alert-warning">
+                        <strong>Note:</strong> Module functions share state through a global singleton. For multi-tenant or isolated scenarios, use the <code class="inline-code">BBSS</code> class directly.
+                    </div>
+                </section>
+
+                <!-- Runtime Configuration -->
+                <section class="section" id="runtime-config">
+                    <h2 class="section-title">Runtime Configuration</h2>
+                    <p class="paragraph">
+                        BBSS supports three levels of configuration (in priority order):
+                    </p>
+                    <ol>
+                        <li><strong>Programmatic overrides</strong> (highest priority)</li>
+                        <li><strong>Environment variables</strong></li>
+                        <li><strong>Default values</strong> (lowest priority)</li>
+                    </ol>
+
+                    <h3 class="section-subtitle">Option 1: Per-Instance Configuration</h3>
+                    <div class="code-block">from bbss import BBSS
+
+# Override specific settings for this instance
+engine = BBSS(
+    DATABASE_PATH="./production.db",
+    RISK_THRESHOLD_HIGH=80,
+    ML_ENABLED=True,
+    LOG_LEVEL="DEBUG"
+)
+
+# Access the config
+print(engine.config.RISK_THRESHOLD_HIGH)  # 80</div>
+
+                    <h3 class="section-subtitle">Option 2: Global Configuration</h3>
+                    <div class="code-block">from bbss import configure, get_config
+
+# Configure globally before using module functions
+configure(
+    LOG_DIR="./custom_logs",
+    CONSOLE_LOGGING=False,
+    MAX_FAILED_ATTEMPTS=3
+)
+
+# Use the config elsewhere
+config = get_config()
+print(config.MAX_FAILED_ATTEMPTS)  # 3</div>
+
+                    <h3 class="section-subtitle">Option 3: Environment Variables</h3>
+                    <div class="code-block"># .env file
+DATABASE_PATH=./production.db
+RISK_THRESHOLD_WARNING=40
+RISK_THRESHOLD_HIGH=80
+ML_ENABLED=true
+LOG_LEVEL=DEBUG</div>
+
+                    <div class="alert alert-note">
+                        <strong>Note:</strong> Programmatic configuration takes precedence over environment variables, which take precedence over defaults.
+                    </div>
+                </section>
+
+                <!-- Config Reference -->
+                <section class="section" id="config-reference">
+                    <h2 class="section-title">Configuration Reference</h2>
+                    <p class="paragraph">
+                        All configurable options with their default values and types:
+                    </p>
+
+                    <h3 class="section-subtitle">Database</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">DATABASE_PATH</span></td>
+                                <td><span class="param-type">str</span></td>
+                                <td><code>./bbss.db</code></td>
+                                <td>SQLite database path</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">DATABASE_URL</span></td>
+                                <td><span class="param-type">str</span></td>
+                                <td><code>""</code></td>
+                                <td>PostgreSQL DSN for production</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Authentication</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">SECRET_KEY</span></td>
+                                <td><span class="param-type">str</span></td>
+                                <td><code>""</code></td>
+                                <td>Secret key for HMAC operations</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">SESSION_EXPIRY_HOURS</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>24</code></td>
+                                <td>Session token lifetime in hours</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">MAX_FAILED_ATTEMPTS</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>5</code></td>
+                                <td>Failed logins before lockout</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">LOCKOUT_DURATION_MINUTES</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>30</code></td>
+                                <td>Account lockout duration in minutes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Profile & Detection</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">MIN_SESSIONS_BOOTSTRAPPING</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>5</code></td>
+                                <td>Sessions before warmup stage begins</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">MIN_SESSIONS_WARMUP</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>10</code></td>
+                                <td>Sessions before active stage begins</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ZSCORE_THRESHOLD</span></td>
+                                <td><span class="param-type">float</span></td>
+                                <td><code>2.0</code></td>
+                                <td>Z-score deviation threshold for anomaly flagging</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">IQR_MULTIPLIER</span></td>
+                                <td><span class="param-type">float</span></td>
+                                <td><code>1.5</code></td>
+                                <td>IQR multiplier for time-based anomaly detection</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Risk Scoring Weights</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_TYPING_TIME</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>20</code></td>
+                                <td>Weight for typing time deviation</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_LOGIN_HOUR</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>25</code></td>
+                                <td>Weight for unusual login hour</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_LOGIN_DAY</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>10</code></td>
+                                <td>Weight for unusual login day</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_UNKNOWN_IP</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>20</code></td>
+                                <td>Weight for unknown IP address</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_COMMAND_COUNT</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>15</code></td>
+                                <td>Weight for command count anomaly</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_UNKNOWN_COMMANDS</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>10</code></td>
+                                <td>Weight for unknown commands</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_SESSION_DURATION</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>10</code></td>
+                                <td>Weight for session duration anomaly</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_WEIGHT_ML_FLAG</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>30</code></td>
+                                <td>Weight for ML anomaly flag</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Risk Thresholds</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">RISK_THRESHOLD_WARNING</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>31</code></td>
+                                <td>Score threshold for WARNING level</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">RISK_THRESHOLD_HIGH</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>61</code></td>
+                                <td>Score threshold for HIGH_RISK level</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Logging</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">LOG_DIR</span></td>
+                                <td><span class="param-type">str</span></td>
+                                <td><code>./logs</code></td>
+                                <td>Log directory path</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">LOG_LEVEL</span></td>
+                                <td><span class="param-type">str</span></td>
+                                <td><code>INFO</code></td>
+                                <td>Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">LOG_RETENTION_DAYS</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>30</code></td>
+                                <td>Log retention period in days</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">CONSOLE_LOGGING</span></td>
+                                <td><span class="param-type">bool</span></td>
+                                <td><code>true</code></td>
+                                <td>Enable console logging output</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="section-subtitle">Machine Learning</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">ML_ENABLED</span></td>
+                                <td><span class="param-type">bool</span></td>
+                                <td><code>true</code></td>
+                                <td>Enable ML anomaly detection</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ML_MIN_SESSIONS_FOR_TRAINING</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>20</code></td>
+                                <td>Minimum sessions before model training</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ML_RETRAIN_EVERY_N_SESSIONS</span></td>
+                                <td><span class="param-type">int</span></td>
+                                <td><code>10</code></td>
+                                <td>Retrain model after N new sessions</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ML_MODELS_DIR</span></td>
+                                <td><span class="param-type">str</span></td>
+                                <td><code>./ml/models</code></td>
+                                <td>Directory for serialized ML models</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ML_ISOLATION_FOREST_CONTAMINATION</span></td>
+                                <td><span class="param-type">float</span></td>
+                                <td><code>0.1</code></td>
+                                <td>Expected anomaly ratio in training data</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">ML_ANOMALY_THRESHOLD</span></td>
+                                <td><span class="param-type">float</span></td>
+                                <td><code>-0.1</code></td>
+                                <td>Anomaly score threshold for classification</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Environment Variables -->
+                <section class="section" id="env-variables">
+                    <h2 class="section-title">Environment Variables</h2>
+                    <p class="paragraph">
+                        BBSS can be fully configured via environment variables. Copy <code class="inline-code">.env.example</code> to <code class="inline-code">.env</code> and customize as needed.
+                    </p>
+
+                    <h3 class="section-subtitle">Complete .env Example</h3>
+                    <div class="code-block"># Database Configuration
+DATABASE_PATH=./bbss.db
+DATABASE_URL=
+
+# Security Settings
+SECRET_KEY=your-secret-key-here
+SESSION_EXPIRY_HOURS=24
+MAX_FAILED_ATTEMPTS=5
+LOCKOUT_DURATION_MINUTES=30
+
+# Anomaly Detection Thresholds
+MIN_SESSIONS_BOOTSTRAPPING=5
+MIN_SESSIONS_WARMUP=10
+ZSCORE_THRESHOLD=2.0
+IQR_MULTIPLIER=1.5
+
+# Risk Scoring Weights
+RISK_WEIGHT_TYPING_TIME=20
+RISK_WEIGHT_LOGIN_HOUR=25
+RISK_WEIGHT_LOGIN_DAY=10
+RISK_WEIGHT_UNKNOWN_IP=20
+RISK_WEIGHT_COMMAND_COUNT=15
+RISK_WEIGHT_UNKNOWN_COMMANDS=10
+RISK_WEIGHT_SESSION_DURATION=10
+RISK_WEIGHT_ML_FLAG=30
+
+# Risk Thresholds
+RISK_THRESHOLD_WARNING=31
+RISK_THRESHOLD_HIGH=61
+
+# Logging Configuration
+LOG_DIR=./logs
+LOG_LEVEL=INFO
+LOG_RETENTION_DAYS=30
+CONSOLE_LOGGING=true
+
+# Machine Learning Settings
+ML_ENABLED=true
+ML_MIN_SESSIONS_FOR_TRAINING=20
+ML_RETRAIN_EVERY_N_SESSIONS=10
+ML_MODELS_DIR=./ml/models</div>
+
+                    <div class="alert alert-warning">
+                        <strong>Security Notice:</strong> Never commit your <code class="inline-code">.env</code> file to version control. The <code class="inline-code">SECRET_KEY</code> should be a random 32-byte hex string generated with <code class="inline-code">python -c "import secrets; print(secrets.token_hex(32))"</code>
+                    </div>
+                </section>
+
+                <!-- Examples -->
+                <section class="section" id="examples">
+                    <h2 class="section-title">Examples</h2>
+
+                    <h3 class="section-subtitle">Example 1: High Security Configuration</h3>
+                    <div class="code-block">from bbss import BBSS
+
+# Strict security settings for sensitive applications
+engine = BBSS(
+    RISK_THRESHOLD_WARNING=20,
+    RISK_THRESHOLD_HIGH=50,
+    MAX_FAILED_ATTEMPTS=3,
+    ZSCORE_THRESHOLD=1.5,  # More sensitive
+    ML_ENABLED=True
+)
+
+result = engine.login("admin", "SecurePass123!", typing_time=3.0)
+print(f"Risk Score: {result['risk_score']}, Decision: {result['decision']}")</div>
+
+                    <h3 class="section-subtitle">Example 2: Development Configuration</h3>
+                    <div class="code-block">from bbss import configure
+
+# Relaxed settings for testing and development
+configure(
+    DATABASE_PATH=":memory:",
+    LOG_LEVEL="DEBUG",
+    CONSOLE_LOGGING=True,
+    ML_ENABLED=False,  # Disable ML for faster tests
+    MIN_SESSIONS_BOOTSTRAPPING=1,
+    MIN_SESSIONS_WARMUP=2
+)
+
+from bbss import signup, login
+
+signup("testuser", "TestPass123!")
+result = login("testuser", "TestPass123!")
+print(result["decision"])  # Should be ALLOW for new users</div>
+
+                    <h3 class="section-subtitle">Example 3: Session Management with Commands</h3>
+                    <div class="code-block">from bbss import BBSS
+
+engine = BBSS()
+signup("developer", "DevPass123!")
+
+result = engine.login("developer", "DevPass123!", typing_time=2.0)
+session = result["session"]
+
+if session:
+    # Track user actions during session
+    engine.execute_command(session, "git_push")
+    engine.execute_command(session, "deploy_production")
+    engine.execute_command(session, "view_logs")
+    
+    # End session and save behavior data
+    engine.end_session(session)
+    print("Session completed successfully")</div>
+
+                    <h3 class="section-subtitle">Example 4: Handling Secondary Verification</h3>
+                    <div class="code-block">from bbss import BBSS
+
+engine = BBSS()
+
+result = engine.login("user", "Password123!", typing_time=8.0)  # Suspicious typing time
+
+if result.get("requires_verification"):
+    pin = result["pin"]
+    print(f"Enter this PIN: {pin}")
+    
+    # In real app: get PIN from user input
+    # user_pin = get_user_pin_input()
+    # verified = engine.verify_pin(result["session"], user_pin)
+    
+elif result.get("session"):
+    print("Access granted")
+    
+else:
+    print("Access blocked:", result.get("error"))</div>
+
+                    <h3 class="section-subtitle">Example 5: User Security Report</h3>
+                    <div class="code-block">from bbss import BBSS
+
+engine = BBSS()
+
+# Get security report for a user
+report = engine.get_user_report(user_id=1)
+
+print(f"Total Sessions: {report['total_sessions']}")
+print(f"Risk Summary: {report['risk_summary']}")
+print(f"Recent Events: {report['recent_events']}")</div>
+                </section>
+
+                <!-- Troubleshooting -->
+                <section class="section" id="troubleshooting">
+                    <h2 class="section-title">Troubleshooting</h2>
+
+                    <h3 class="section-subtitle">Common Issues</h3>
+                    
+                    <div class="alert alert-warning">
+                        <strong>ImportError: No module named 'bbss'</strong><br>
+                        <strong>Solution:</strong> Run <code class="inline-code">pip install -e .</code> in the project root directory to install the package in development mode.
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>Session blocked unexpectedly for new user</strong><br>
+                        <strong>Solution:</strong> New users in bootstrapping stage (first 4 sessions) should never be blocked. Check that <code class="inline-code">MIN_SESSIONS_BOOTSTRAPPING</code> is set correctly and that the database is properly initialized.
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>ML model not training</strong><br>
+                        <strong>Solution:</strong> Ensure <code class="inline-code">ML_ENABLED=True</code> and the user has at least <code class="inline-code">ML_MIN_SESSIONS_FOR_TRAINING</code> (default: 20) sessions. Check that the ML models directory is writable.
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>Config changes not taking effect</strong><br>
+                        <strong>Solution:</strong> Configuration is read at engine initialization. Ensure <code class="inline-code">configure()</code> or constructor arguments are set before creating the BBSS engine instance.
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>Database locked errors</strong><br>
+                        <strong>Solution:</strong> SQLite has limited concurrent write support. Use PostgreSQL for production multi-user scenarios. Ensure only one process writes to the database at a time.
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>Password verification failing</strong><br>
+                        <strong>Solution:</strong> Argon2 hashing is intentionally slow. If testing feels slow, use <code class="inline-code">:memory:</code> database with reduced Argon2 parameters, not in production.
+                    </div>
+
+                    <h3 class="section-subtitle">Debug Mode</h3>
+                    <p class="paragraph">
+                        Enable debug logging to diagnose issues:
+                    </p>
+                    <div class="code-block">from bbss import configure
+
+configure(LOG_LEVEL="DEBUG", CONSOLE_LOGGING=True)
+
+# Now all operations will print detailed logs</div>
+                </section>
+
+                <!-- Contributing -->
+                <section class="section" id="contributing">
+                    <h2 class="section-title">Contributing</h2>
+                    <p class="paragraph">
+                        Contributions are welcome! Please follow these steps to contribute to BBSS:
+                    </p>
+                    <ol>
+                        <li>Fork the repository on GitHub</li>
+                        <li>Clone your fork locally:
+                            <div class="code-block">git clone https://github.com/your-username/behavior-based-security-system.git
+cd behavior-based-security-system</div>
+                        </li>
+                        <li>Create a feature branch:
+                            <div class="code-block">git checkout -b feature/amazing-feature</div>
+                        </li>
+                        <li>Install development dependencies:
+                            <div class="code-block">pip install -e ".[dev]"</div>
+                        </li>
+                        <li>Make your changes and write tests</li>
+                        <li>Ensure all tests pass:
+                            <div class="code-block">pytest tests/ -v</div>
+                        </li>
+                        <li>Commit your changes:
+                            <div class="code-block">git commit -m 'Add amazing feature'</div>
+                        </li>
+                        <li>Push to the branch:
+                            <div class="code-block">git push origin feature/amazing-feature</div>
+                        </li>
+                        <li>Open a Pull Request on GitHub</li>
+                    </ol>
+                    <div class="alert alert-note">
+                        <strong>Code Quality:</strong> Please maintain test coverage above 80%. Run <code class="inline-code">pytest --cov=src --cov-report=term-missing</code> to check coverage.
+                    </div>
+                </section>
+
+                <!-- Next Steps -->
+                <section class="section" id="next-steps">
+                    <h2 class="section-title">Next Steps</h2>
+                    <div class="alert alert-success">
+                        <strong>Ready to use BBSS?</strong> Check out the <a href="#quickstart" style="color: var(--accent); font-weight: 600;">Quick Start</a> guide to begin integrating BBSS into your application.
+                    </div>
+                    <ul>
+                        <li><strong>GitHub Repository:</strong> <a href="https://github.com/Favour-OE/behavior-based-security-system" style="color: var(--accent);">github.com/Favour-OE/behavior-based-security-system</a></li>
+                        <li><strong>Report Issues:</strong> Open an issue on GitHub for bugs or feature requests</li>
+                        <li><strong>Tests:</strong> 88+ tests with comprehensive coverage</li>
+                        <li><strong>License:</strong> MIT License</li>
+                    </ul>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
